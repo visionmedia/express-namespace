@@ -14,6 +14,8 @@ var express = require('express')
 
 [express.Server || express.HTTPServer, express.HTTPSServer].forEach(function(Server) {
 	
+	if (Server == undefined) return;
+	
 	/**
 	 * Namespace using the given `path`, providing a callback `fn()`,
 	 * which will be invoked immediately, resetting the namespace to the previous.
