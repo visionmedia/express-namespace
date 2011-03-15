@@ -11,61 +11,65 @@
 
 var express = require('express')
   , join = require('path').join
-  , Server = express.Server
-    ? express.Server
-    : express.HTTPServer;
+  , servers = express.Server
+    ? [express.Server]
+    : [express.HTTPServer, express.HTTPSServer];
 
-/**
- * Namespace using the given `path`, providing a callback `fn()`,
- * which will be invoked immediately, resetting the namespace to the previous.
- *
- * @param {String} path
- * @param {Function} fn
- * @return {Server} for chaining
- * @api public
- */
+servers.forEach(function(Server){
 
-Server.prototype.namespace = function(path, fn){
-  (this._ns = this._ns || []).push(path);
-  fn.call(this);
-  this._ns.pop();
-  return this;
-};
+  /**
+   * Namespace using the given `path`, providing a callback `fn()`,
+   * which will be invoked immediately, resetting the namespace to the previous.
+   *
+   * @param {String} path
+   * @param {Function} fn
+   * @return {Server} for chaining
+   * @api public
+   */
 
-/**
- * Return the current namespace.
- *
- * @return {String}
- * @api public
- */
+  Server.prototype.namespace = function(path, fn){
+    (this._ns = this._ns || []).push(path);
+    fn.call(this);
+    this._ns.pop();
+    return this;
+  };
 
-Server.prototype.__defineGetter__('currentNamespace', function(){
-  return join.apply(this, this._ns).replace(/\/$/, '') || '/';
-});
+  /**
+   * Return the current namespace.
+   *
+   * @return {String}
+   * @api public
+   */
 
-/**
- * Proxy HTTP methods to provide namespacing support.
- */
+  Server.prototype.__defineGetter__('currentNamespace', function(){
+    return join.apply(this, this._ns).replace(/\/$/, '') || '/';
+  });
 
-express.router.methods.concat(['del', 'all']).forEach(function(method){
-  var orig = Server.prototype[method];
-  Server.prototype[method] = function(){
-    var args = Array.prototype.slice.call(arguments)
-      , path = args.shift()
-      , fn = args.pop()
-      , self = this;
+  /**
+   * Proxy HTTP methods to provide namespacing support.
+   */
 
-    this.namespace(path, function(){
-      var curr = this.currentNamespace;
-      args.forEach(function(fn){
+  express.router.methods.concat(['del', 'all']).forEach(function(method){
+    var orig = Server.prototype[method];
+    Server.prototype[method] = function(){
+      var args = Array.prototype.slice.call(arguments)
+        , path = args.shift()
+        , fn = args.pop()
+        , self = this;
+
+      this.namespace(path, function(){
+        var curr = this.currentNamespace;
+        args.forEach(function(fn){
+          fn.namespace = curr;
+          orig.call(self, curr, fn);
+        });
+
         fn.namespace = curr;
         orig.call(self, curr, fn);
       });
 
-      fn.namespace = curr;
-      orig.call(self, curr, fn);
-    });
+      return this;
+    };
+  });
 
-    return this;
-  };
 });
