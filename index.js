@@ -1,4 +1,3 @@
-
 /*!
  * Express - Contrib - namespace
  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
@@ -46,7 +45,7 @@ exports.__defineGetter__('currentNamespace', function(){
  * Proxy HTTP methods to provide namespacing support.
  */
 
-express.router.methods.concat(['del', 'all']).forEach(function(method){
+express.router.methods.forEach(function(method){
   var orig = HTTPServer.prototype[method];
   exports[method] = function(){
     var args = Array.prototype.slice.call(arguments)
