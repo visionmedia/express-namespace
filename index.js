@@ -24,10 +24,19 @@ var express = require('express')
  * @api public
  */
 
-exports.namespace = function(path, fn){
+exports.namespace = function(){
+  var args = Array.prototype.slice.apply(arguments)
+    , path = args.shift()
+    , fn = args.pop()
+
+  if(args.length == 1 && Array.isArray(args[0])){
+    args = args[0];
+  }
   (this._ns = this._ns || []).push(path);
+  this._chains = (this._chains = this._chains || []).concat(args);
   fn.call(this);
   this._ns.pop();
+  
   return this;
 };
 
@@ -42,6 +51,9 @@ exports.__defineGetter__('currentNamespace', function(){
   return join.apply(this, this._ns).replace(/\/$/, '') || '/';
 });
 
+exports.__defineGetter__('chains', function(){
+  return this._chains;
+});
 /**
  * Proxy HTTP methods to provide namespacing support.
  */
@@ -56,7 +68,7 @@ express.router.methods.concat(['del']).forEach(function(method){
 
     this.namespace(path, function(){
       var curr = this.currentNamespace;
-      args.forEach(function(fn){
+      self.chains.concat(args).forEach(function(fn){
         fn.namespace = curr;
         orig.call(self, curr, fn);
       });
