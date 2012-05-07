@@ -56,12 +56,21 @@ exports.__defineGetter__('currentNamespace', function(){
   var orig = app[method];
   exports[method] = function(){
     var args = Array.prototype.slice.call(arguments)
+      , len  = args.length
       , path = args.shift()
       , fn = args.pop()
       , self = this;
 
+    // Prevent namepacing getter on application
+    if(method === 'get' && len === 1) {
+      return orig.apply(this,Array.prototype.slice.call(arguments));
+    }
+
+
     this.namespace(path, function(){
-      var curr = this.currentNamespace;
+      // currentNamespace property getter return an invalid path (a '.') ? - So I don't use it
+      var curr = join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
+
       args.forEach(function(fn){
         fn.namespace = curr;
         orig.call(self, curr, fn);
