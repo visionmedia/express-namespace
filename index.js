@@ -44,9 +44,9 @@ exports.namespace = function(){
  * @api public
  */
 
-exports.__defineGetter__('currentNamespace', function(){
+exports.getCurrentNamespace = function(){
   return join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
-});
+};
 
 /**
  * Proxy HTTP methods to provide namespacing support.
@@ -68,8 +68,7 @@ exports.__defineGetter__('currentNamespace', function(){
 
 
     this.namespace(path, function(){
-      // currentNamespace property getter return an invalid path (a '.') ? - So I don't use it
-      var curr = join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
+      var curr = this.getCurrentNamespace();
 
       args.forEach(function(fn){
         fn.namespace = curr;
@@ -88,6 +87,5 @@ exports.__defineGetter__('currentNamespace', function(){
 
 for (var key in exports) {
   var desc = Object.getOwnPropertyDescriptor(exports, key);
-  Object.defineProperty(app, key, desc);
   Object.defineProperty(app, key, desc);
 }
