@@ -44,9 +44,9 @@ exports.namespace = function(){
  * @api public
  */
 
-exports.__defineGetter__('currentNamespace', function(){
+exports.getCurrentNamespace = function(){
   return join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
-});
+};
 
 /**
  * Proxy HTTP methods to provide namespacing support.
@@ -56,12 +56,20 @@ exports.__defineGetter__('currentNamespace', function(){
   var orig = app[method];
   exports[method] = function(){
     var args = Array.prototype.slice.call(arguments)
+      , len  = args.length
       , path = args.shift()
       , fn = args.pop()
       , self = this;
 
+    // Prevent namepacing getter on application
+    if(method === 'get' && len === 1) {
+      return orig.apply(this,Array.prototype.slice.call(arguments));
+    }
+
+
     this.namespace(path, function(){
-      var curr = this.currentNamespace;
+      var curr = this.getCurrentNamespace();
+
       args.forEach(function(fn){
         fn.namespace = curr;
         orig.call(self, curr, fn);
@@ -79,6 +87,5 @@ exports.__defineGetter__('currentNamespace', function(){
 
 for (var key in exports) {
   var desc = Object.getOwnPropertyDescriptor(exports, key);
-  Object.defineProperty(app, key, desc);
   Object.defineProperty(app, key, desc);
 }

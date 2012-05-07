@@ -7,7 +7,8 @@
   , "devDependencies": {
       "express": "3.x"
     , "ejs": ">= 0.0.1"
-    , "expresso": ">= 0.0.1"
+    , "mocha": "1.x.x"
+    , "should": "0.6.x"
   }
   , "engines": { "node": ">= 0.2.0" }
 }
