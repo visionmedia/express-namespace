@@ -10,6 +10,7 @@
 
 var express = require('express')
   , join = require('path').join
+  , noOp = function(req, res, next) { next(); }
   , HTTPServer = express.HTTPServer
   , HTTPSServer = express.HTTPSServer;
 
@@ -56,7 +57,7 @@ express.router.methods.concat('del').forEach(function(method){
   exports[method] = function(){
     var args = Array.prototype.slice.call(arguments)
       , path = args.shift()
-      , fn = args.pop()
+      , fn = args.pop() || noOp
       , self = this;
 
     this.namespace(path, function(){

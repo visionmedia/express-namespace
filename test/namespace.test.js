@@ -7,6 +7,15 @@ var express = require('express')
   , namespace = require('../');
 
 module.exports = {
+  'test proxy methods being called without a callback function': function() {
+    var app = express.createServer();
+    assert.doesNotThrow(function() {
+      app.get('/something');
+    });
+
+    assert.equal(app.get('/something'), app);
+  },
+
   'test app.namespace(str, fn)': function(){
     var app = express.createServer()
       , id;
