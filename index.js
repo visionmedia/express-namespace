@@ -45,7 +45,13 @@ exports.namespace = function(){
  */
 
 exports.__defineGetter__('currentNamespace', function(){
-  return join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
+  var path = this._ns[this._ns.length-1];
+  if( path && path.constructor === RegExp ) {
+    return path;
+  }
+  else {
+    return join.apply(this, this._ns).replace(/\\/g, '/').replace(/\/$/, '') || '/';
+  }
 });
 
 /**
