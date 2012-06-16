@@ -75,6 +75,16 @@ exports.__defineGetter__('currentNamespace', function(){
   };
 });
 
+namespace = exports.currentNamespace;
+exports.namespaceUrl = function namespaceUrl(){
+  return function namespaceUrl(req, res, next){
+    if(req.url.match("^" + currentNamespace) && req.method == "GET"){
+      req.url = req.url.replace(currentNamespace, "");
+    }
+    next();
+  };
+}
+
 // merge
 
 for (var key in exports) {
