@@ -33,7 +33,7 @@ describe('app.namespace(path, fn)', function(){
 
   it('should prefix within .namespace()', function(done){
     var app = express();
-    done = pending(4, done);
+    done = pending(6, done);
 
     app.get('/one', function(req, res){
       res.send('GET one');
