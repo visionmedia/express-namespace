@@ -116,13 +116,15 @@ describe('app.namespace(path, fn)', function(){
 		});
 
 		app.namespace('/forum/:id', function(){
+
 			app.get('/', function(req, res){
 				res.send('' + req.params.id);
 			});
-		});
 
-		app.get(/^\/(?!login$|account\/login$|logout$)(.*)/, function(req, res) {
-			res.send("crazy reg");
+			app.get(/^\/(?!login$|account\/login$|logout$)(.*)/, function(req, res) {
+				res.send("crazy reg");
+			});
+
 		});
 
 		request(app)
