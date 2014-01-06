@@ -109,7 +109,7 @@ describe('app.namespace(path, fn)', function(){
 
 	it('should not die with regexes, but they ignore namespacing', function(done){
 		var app = express();
-		done = pending(2, done);
+		done = pending(3, done);
 
 		app.get(/test\d\d\d/, function(req, res) {
 			res.send("GET test");
