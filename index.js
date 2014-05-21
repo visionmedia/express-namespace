@@ -53,7 +53,6 @@ methods.forEach(function(method){
         , self = this;
 
       this.namespace(path, function(){
-        path = this._ns.join('/').replace(/\/\//g, '/').replace(/\/$/, '') || '/';
         path = 'string' !== typeof path ? path : this._ns.join('/').replace(/\/\//g, '/').replace(/\/$/, '') || '/';
         args.forEach(function(fn){
           orig.call(self, path, fn);

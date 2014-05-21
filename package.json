@@ -7,19 +7,19 @@
     "test": "make test"
   },
   "keywords": [
-      "express"
+    "express"
   ],
   "main": "index",
   "dependencies": {
-      "methods": "^1.0.0"
+    "express": "^4.3.0",
+    "methods": "^1.0.0"
   },
   "devDependencies": {
-      "express": "4",
-      "mocha": "*",
-      "supertest": "*"
+    "mocha": "*",
+    "supertest": "*"
   },
   "repository": {
-      "type": "git",
-      "url": "https://github.com/visionmedia/express-namespace.git"
+    "type": "git",
+    "url": "https://github.com/visionmedia/express-namespace.git"
   }
 }
