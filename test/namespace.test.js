@@ -117,4 +117,53 @@ describe('app.namespace(path, fn)', function(){
       assert.equal(app.routes[method][0].path, '/method', 'not support method ' + method);
     }
   })
+
+
+  describe('routes with regexp', function(){
+
+    it('should allow regexp routes', function(done){
+      var app = express();
+      done = pending(2, done);
+
+      app.namespace('/forum/:id', function(){
+        app.get('/((view)?)', function(req, res){
+          res.send('' + req.params.id);
+        });
+      });
+
+      request(app)
+        .get('/forum/23/')
+        .expect('23', done);
+
+      request(app)
+        .get('/forum/23/view')
+        .expect('23', done);
+      
+    })
+
+    it('should allow for complex regexp in routes', function(done){
+      var app = express();
+
+      done = pending(2, done);
+
+      app.namespace('/blog/:id', function(){
+        app.get('/((:page)?)', function(req, res){
+          if (req.params.page){
+            return res.send('' + req.params.page);
+          }
+          res.send('' + req.params.id);
+        })
+      });
+
+      request(app)
+        .get('/blog/23/')
+        .expect('23', done);
+
+      request(app)
+        .get('/blog/23/12')
+        .expect('12', done);
+
+    });
+  })
+
 })
