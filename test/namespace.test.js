@@ -49,7 +49,7 @@ describe('app.namespace(path, fn)', function(){
           res.send('GET baz');
         });
 
-        app.del('/all', function(req, res){
+        app.delete('/all', function(req, res){
           res.send('DELETE all baz');
         });
       })

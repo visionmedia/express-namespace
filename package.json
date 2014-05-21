@@ -3,6 +3,9 @@
     "description": "Express namespaced routes extension",
     "version": "0.1.1",
     "author": "TJ Holowaychuk <tj@vision-media.ca>",
+    "scripts": {
+      "test": "make test"
+    },
     "keywords": [
         "express"
     ],
@@ -11,8 +14,7 @@
         "methods": "0.0.1"
     },
     "devDependencies": {
-        "express": "3.x",
-        "ejs": "*",
+        "express": "4",
         "mocha": "*",
         "supertest": "*"
     },
