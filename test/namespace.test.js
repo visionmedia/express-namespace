@@ -119,6 +119,39 @@ describe('app.namespace(path, fn)', function(){
   })
 
 
+  it('should not die with regexes, but they ignore namespacing', function(done){
+    var app = express();
+    done = pending(3, done);
+
+    app.get(/test\d\d\d/, function(req, res) {
+      res.send("GET test");
+    });
+
+    app.namespace('/forum/:id', function(){
+
+      app.get('/', function(req, res){
+        res.send('' + req.params.id);
+      });
+
+      app.get(/^\/((?!login$|account\/login$|logout$)(.*))/, function(req, res) {
+        res.send("crazy reg");
+      });
+
+    });
+
+    request(app)
+      .get('/forum/23')
+      .expect('23', done);
+
+    request(app)
+      .get('/test123')
+      .expect('GET test', done);
+
+    request(app)
+      .get('/account/123')
+      .expect('crazy reg', done);
+  })
+
   describe('routes with regexp', function(){
 
     it('should allow regexp routes', function(done){
