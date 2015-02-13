@@ -33,16 +33,17 @@ var namespace = exports.namespace = function(){
   return this;
 };
 
-apps.forEach(function(app){
-  app.namespace = namespace;
-});
-
 /**
- * Proxy HTTP methods to provide namespacing support.
+ * Add the `namespace` method to the provided `app`, and proxy the HTTP methods
+ * to provide namespacing support
+ * @param {Server} app
+ * @return {Server} for chaining
+ * @api public
  */
-
-methods.forEach(function(method){
-  apps.forEach(function(app){
+var init = exports.init = function(app){
+  app.namespace = namespace;
+  // Proxy HTTP methods to provide namespacing support
+  methods.forEach(function(method){
     var orig = app[method];
     app[method] = function(val){
       var len = arguments.length;
@@ -62,4 +63,7 @@ methods.forEach(function(method){
       return this;
     };
   });
-});
+  return app;
+};
+
+apps.forEach(init);
