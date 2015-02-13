@@ -106,4 +106,16 @@ describe('app.namespace(path, fn)', function(){
     .get('/forum/23')
     .expect('23', done);
   })
+
+  it('should support VERB methods as express', function(done){
+    var app = express();
+
+    app.namespace('/method', function(){
+      app.all('/', function(){ });
+    });
+    for(var method in app.routes) {
+      assert.equal(app.routes[method][0].path, '/method', 'not support method ' + method);
+    }
+    done();
+  })
 })

@@ -8,7 +8,7 @@
     ],
     "main": "index",
     "dependencies": {
-        "methods": "0.0.1"
+        "methods": "0.1.0"
     },
     "devDependencies": {
         "express": "3.x",
