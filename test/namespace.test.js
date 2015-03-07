@@ -29,7 +29,7 @@ describe('app.namespace(path, fn)', function(){
     request(app)
     .get('/some/two')
     .expect('GET two', done);
-  })
+  });
 
   it('should prefix within .namespace()', function(done){
     var app = express();
@@ -52,12 +52,12 @@ describe('app.namespace(path, fn)', function(){
         app.del('/all', function(req, res){
           res.send('DELETE all baz');
         });
-      })
+      });
 
       app.get('/bar', function(req, res){
         res.send('bar');
       });
-    })
+    });
 
     app.get('/some/two', function(req, res){
       res.send('GET two');
@@ -86,7 +86,7 @@ describe('app.namespace(path, fn)', function(){
     request(app)
     .get('/foo/bar')
     .expect('bar', done);
-  })
+  });
 
   it('should support middleware', function(done){
     var app = express();
@@ -105,5 +105,29 @@ describe('app.namespace(path, fn)', function(){
     request(app)
     .get('/forum/23')
     .expect('23', done);
-  })
-})
+  });
+
+  it('should register paths once for all middleware', function(done){
+    var app = express();
+
+    function a(req, res, next) {
+      next('route');
+    }
+
+    function b(req, res, next) {
+      res.send(500);
+    }
+
+    app.namespace('/forum/:id', function(){
+      app.get('/', a, b);
+    });
+
+    app.get('/forum/:id', function(req, res){
+      res.send('' + req.params.id);
+    });
+
+    request(app)
+    .get('/forum/23')
+    .expect('23', done);
+  });
+});

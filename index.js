@@ -54,9 +54,8 @@ methods.forEach(function(method){
 
       this.namespace(path, function(){
         path = this._ns.join('/').replace(/\/\//g, '/').replace(/\/$/, '') || '/';
-        args.forEach(function(fn){
-          orig.call(self, path, fn);
-        });
+        args.unshift(path);
+        orig.apply(self, args);
       });
 
       return this;
