@@ -10,6 +10,10 @@
     "dependencies": {
         "methods": "0.0.1"
     },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/visionmedia/express-namespace.git"
+      },
     "devDependencies": {
         "express": "3.x",
         "ejs": "*",
